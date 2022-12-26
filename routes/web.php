@@ -15,19 +15,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
+    return view('home');
+})->middleware('auth');
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::group(['middleware' => ['role:super-admin']], function () {
-    //
-});
-
 Route::group(['middleware' =>['role:admin']],function(){
     Route::get('/usercreate',[UserController::class, 'create'])->name('usercreate');
     Route::post('/usercreate',[UserController::class, 'insert'])->name('userinsert');
-    Route::post('/userview',[UserController::class, 'view'])->name('userview');
+    Route::get('/userview',[UserController::class, 'view'])->name('userview');
+});
+Route::group(['middleware' =>['role:merchant']],function(){
+    Route::get('/salescreate',[UserController::class, 'create'])->name('salescreate');
+    Route::post('/salescreate',[UserController::class, 'insert'])->name('salesinsert');
+    Route::get('/salesview',[UserController::class, 'view'])->name('salesview');
 });
 

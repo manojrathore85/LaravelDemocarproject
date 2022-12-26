@@ -31,10 +31,22 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
+                    @auth
                     <ul class="navbar-nav me-auto">
-
+                        @hasrole('admin')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('usercreate') }}">Create User</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('userview') }}"> User List</a>
+                        </li>
+                        @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('usercreate') }}">Create Sales</a>
+                        </li>
+                        @endhasrole
                     </ul>
-
+                    @endauth
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Expr\FuncCall;
 
 class UserController extends Controller
@@ -25,10 +26,15 @@ class UserController extends Controller
         $user = new User();
         $user->name = $request->post('name');
         $user->email = $request->post('email');
-        $user->password = $request->post('password');
+        $user->password =  Hash::make($request->post('password'));
         $user->address = $request->post('address');
         $user->phone = $request->post('phone');
+    
+        $user->assignRole($request->post('role'));
+        //dd($user);
+
         $res = $user->save();
+    
         //->assignRole($request->post('role'));
         if($res){
             return back()->with('success','New User create successfuly');
@@ -36,5 +42,9 @@ class UserController extends Controller
             return back()->with('fail','Something went wrong');
         }
 
+    }
+    public function view(){
+        
+        return back()->with('fail','Not Implemented yet');
     }
 }
