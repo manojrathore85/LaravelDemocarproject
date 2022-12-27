@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,11 +22,14 @@ Auth::routes();
 Route::group(['middleware' =>['role:admin']],function(){
     Route::get('/usercreate',[UserController::class, 'create'])->name('usercreate');
     Route::post('/usercreate',[UserController::class, 'insert'])->name('userinsert');
-    Route::get('/userview',[UserController::class, 'view'])->name('userview');
+    Route::get('/userview',[UserController::class, 'index'])->name('userview');
+    Route::get('/salesview',[SalesController::class, 'index'])->name('salesview');
 });
 Route::group(['middleware' =>['role:merchant']],function(){
-    Route::get('/salescreate',[UserController::class, 'create'])->name('salescreate');
-    Route::post('/salescreate',[UserController::class, 'insert'])->name('salesinsert');
-    Route::get('/salesview',[UserController::class, 'view'])->name('salesview');
+    Route::get('/salescreate',[SalesController::class, 'create'])->name('salescreate');
+    Route::post('/salescreate',[SalesController::class, 'insert'])->name('salesinsert');
+    
 });
+
+
 

@@ -13,7 +13,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
+    
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -40,9 +40,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('userview') }}"> User List</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('salesview') }}"> Sales List</a>
+                        </li>
                         @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('usercreate') }}">Create Sales</a>
+                            <a class="nav-link" href="{{ route('salescreate') }}">Create Sales</a>
                         </li>
                         @endhasrole
                     </ul>
@@ -97,6 +100,7 @@
             </div>
             @yield('content')
         </main>
+        @stack('scripts')
     </div>
 </body>
 

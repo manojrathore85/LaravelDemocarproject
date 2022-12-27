@@ -2,13 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\UsersDataTable;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Expr\FuncCall;
+use DataTables;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    public function index(Request $request)
+    {
+        //return $dataTable->render('userlist');
+        $roles = Role::all()->pluck('name');
+        if ($request->ajax()) {
+            if(!empty($request->get('role'))){
+                $data = User::role($request->get('role'))->get();
+            }else{
+                $data = User::all();
+            }
+           
+                   return Datatables::of($data)->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $btn = '<a href="javascript:void(0)" class="btn btn-primary btn-sm">View</a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        
+        return view('userlist1', compact('roles'));
+    }
     public function create(Request $request){
        $user = new User();
        return view('usercreate',compact('user'));
