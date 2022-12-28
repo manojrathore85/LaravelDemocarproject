@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @push('styles')
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css"> -->
 
 @endpush
 @section('content')
@@ -9,12 +9,12 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">User list </div>
+                <div class="card-header">Sales list </div>
                 <div class="card-body">
                     <label for="user"></label>
                     <div class="col-3">
                         <label for="merchant" >Merchant Name</label>
-                        <select id="merchant" name="merchant" class="form-control" >
+                        <select id="merchant" name="merchant" class="form-select" >
                         <option value=" "> </option>
                         @foreach( $merchants as $merchant )    
                         <option value="{{$merchant->id}}">{{$merchant->name}}</option>
@@ -39,7 +39,7 @@
 @endsection
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script> 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
 
 
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>

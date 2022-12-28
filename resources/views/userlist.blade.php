@@ -14,7 +14,7 @@
                     <label for="user"></label>
                     <div class="col-3">
                         <label for="user">User Name</label>
-                        <select id="user" name="user" class="form-control" >
+                        <select id="user" name="user" class="form-select" >
                         <option value="1">user1</option>
                         <option value="2">user2</option>
                     </select></div>
