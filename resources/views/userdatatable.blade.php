@@ -13,11 +13,14 @@
                 <div class="card-body">
                     <label for="user"></label>
                     <div class="col-3">
-                        <label for="user">User Name</label>
-                        <select id="user" name="user" class="form-select" >
-                        <option value="1">user1</option>
-                        <option value="2">user2</option>
-                    </select></div>
+                        <label for="role">Role Name</label>
+                        <select id="role" name="role" class="form-select">
+                            <option value=" "> </option>
+                            @foreach( $roles as $role )
+                            <option value="{{$role}}">{{$role}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     {{ $dataTable->table() }}
                 </div>
             </div>
@@ -34,31 +37,31 @@
 <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script> -->
 
 
-    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+{{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 
 
-    <!-- <script type="text/javascript">
-  $(function () {
+<script type="text/javascript">
+
+    document.getElementById("role").addEventListener('change', function() {     window.LaravelDataTables["users-table"].ajax.reload()});
+    //  var table = $('#users-table').DataTable({
+    //     processing: true,
+    //     serverSide: true,
+    //     ajax: "{{ route('userview') }}",
+    //     columns: [
+    //         {data: 'id', name: 'id'},
+    //         {data: 'name', name: 'name'},
+    //         {data: 'email', name: 'email'},
+    //         {
+    //            data: 'created_at',
+    //            type: 'num',
+    //            render: {
+    //               _: 'display',
+    //               sort: 'timestamp'
+    //            }
+    //         }
+    //     ]
+    // });
       
-    var table = $('#users-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('userview') }}",
-        columns: [
-            {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
-            {
-               data: 'created_at',
-               type: 'num',
-               render: {
-                  _: 'display',
-                  sort: 'timestamp'
-               }
-            }
-        ]
-    });
-      
-  });
-</script> -->
+
+</script> 
 @endpush

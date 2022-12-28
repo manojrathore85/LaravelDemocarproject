@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Expr\FuncCall;
 use DataTables;
+use Exception;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -25,14 +27,27 @@ class UserController extends Controller
            
                    return Datatables::of($data)->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $btn = '<a href="javascript:void(0)" class="btn btn-primary btn-sm">View</a>';
-                    return $btn;
+                    $btns = '<a href="/useredit/'.$row->id.'" class="btn btn-primary btn-sm">Edit</a>';
+                    $btns .= '<a href="userdelete/'.$row->id.'" class="btn btn-danger btn-sm">Delete</a>';
+                    return $btns;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
         
         return view('userlist1', compact('roles'));
+    }
+    public function view(UsersDataTable $dataTable, Request $request){
+        // if ($request->ajax()) { dd($request->get('testingparam'));}
+          $roles = Role::all()->pluck('name');
+          return $dataTable->with([
+            'id' => '5',
+            'role' => $request->get('role'),
+            ])
+          ->render('userdatatable', compact('roles'));
+        //$dataTable = $dataTable->render('userdatatable');
+        //return view('userdatatable')->with($dataTable->render('userdatatable'));
+
     }
     public function create(Request $request){
        $user = new User();
@@ -62,14 +77,64 @@ class UserController extends Controller
     
         //->assignRole($request->post('role'));
         if($res){
-            return back()->with('success','New User create successfuly');
+            return back()->with('success','New User create successfully');
         }else{
             return back()->with('fail','Something went wrong');
         }
 
     }
-    public function view(){
-        
-        return back()->with('fail','Not Implemented yet');
+    public function edit($id){
+        if(!empty($id)){
+           $user = User::find($id);
+           return view('usercreate',compact('user'));
+        }
+    }
+    public function update($id, Request $request){
+        if(!empty($id)){
+           
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email,'.$id,              
+                'role' => 'required'
+            ]);
+           $user = User::find($id);
+           $user->name = $request->post('name');
+           $user->email = $request->post('email');
+           $user->address = $request->post('address');
+           $user->phone = $request->post('phone');
+           $res = $user->save();
+           if($res){
+                return redirect('userview')->with('success','User updated successfully');
+            }else{
+                return back()->with('fail','Something went wrong');
+            }
+           
+        }
+    }
+    public function delete($id)
+    {
+        if(!empty($id)){
+           
+            $user = User::find($id);
+            try{
+            $res = $user->delete();           
+            return back()->with('success','User deleted successfully');
+           }
+           catch(\Exception $e){
+            return back()->with('fail','Something went wrong Error:'. $e->getMessage());
+           }
+
+        }
+    }
+    public function create10user(){
+        $users = User::factory()
+        ->count(10)
+        ->make()->each(function($u) {
+            $u->assignRole(Role::all()->random());
+            return $u->save();
+        });
+        if($users){
+            return redirect('usercreate')->with('success', '10 user Created Successfully');
+        }
     }
 }

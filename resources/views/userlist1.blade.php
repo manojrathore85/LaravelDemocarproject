@@ -9,27 +9,38 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">User list </div>
+                <div class="card-header">User list
+                    <div class="float-end">
+                        <a href="/usercreate" class="btn btn-primary btn-sm ">Create Users</a>
+                        <a href="/create10user" class="btn btn-primary btn-sm ">Create 10 Rendom Users</a>
+                    </div>
+                </div>
                 <div class="card-body">
-                    <label for="user"></label>
-                    <div class="col-3">
-                        <label for="role" >Role Name</label>
-                        <select id="role" name="role" class="form-select" >
-                        <option value=" "> </option>
-                        @foreach( $roles as $role )    
-                        <option value="{{$role}}">{{$role}}</option>
-                        @endforeach
-                    </select></div>
+                    <div class="row">
+                        <label for="role">Role Name</label>
+                        <div class="col-3">
+
+                            <select id="role" name="role" class="form-select">
+                                <option value=" "> </option>
+                                @foreach( $roles as $role )
+                                <option value="{{$role}}">{{$role}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                    </div>
                     <table id="userlist">
-                           <thead>
+                        <thead>
                             <tr>
-                            <th>Sn</th>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Email</th>
-                            <th>Phone</th>
+                                <th>Sn</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>CreateAt</th>
+                                <th>Action</th>
                             </tr>
-                           </thead> 
+                        </thead>
                     </table>
                 </div>
             </div>
@@ -50,46 +61,68 @@
 
 
 <script type="text/javascript">
-  $(function () {
-      
-    var table = $('#userlist').DataTable({
-        processing: true,
-        serverSide: true,
-       // ajax: "{{ route('userview') }}",
-        ajax: {
-            url: "{{ route('userview') }}",
-            method:'get',
-            data: function (d) {                
-                d.role = $("#role").val();
-                // etc
-            },
-        },
-        columns: [
-            {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
-            {data: 'address', name: 'address'},
-            {data: 'email', name: 'email'},
-            {data: 'phone', name: 'phone'},
-            // {
-            //    data: 'created_at',
-            //    type: 'num',
-            //    render: {
-            //       _: 'display',
-            //       sort: 'timestamp'
-            //    }
-            // }
-        ],
-        buttons: [
-        // 'colvis',
-        // 'excel',
-        // 'print'
-        ]
-    });
+    $(function() {
 
-    $("#role").change(function (){
-        table.ajax.reload();
+        var table = $('#userlist').DataTable({
+            processing: true,
+            serverSide: true,
+            // ajax: "{{ route('userview') }}",
+            ajax: {
+                url: "{{ route('userview') }}",
+                method: 'get',
+                data: function(d) {
+                    d.role = $("#role").val();
+                    // etc
+                },
+            },
+            columns: [{
+                    data: 'id',
+                    name: 'id'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'address',
+                    name: 'address'
+                },
+                {
+                    data: 'email',
+                    name: 'email'
+                },
+                {
+                    data: 'phone',
+                    name: 'phone'
+                },
+                {
+                    data: 'updated_at',
+                    name: 'updated_at'
+                },
+                {
+                    data: 'action',
+                    name: 'Action'
+                },
+                // {
+                //    data: 'created_at',
+                //    type: 'num',
+                //    render: {
+                //       _: 'display',
+                //       sort: 'timestamp'
+                //    }
+                // }
+            ],
+            buttons: [
+                // 'colvis',
+                // 'excel',
+                // 'print'
+            ]
+        });
+
+        $("#role").change(function() {
+            table.ajax.reload();
+        });
+
     });
-      
-  });
 </script>
 @endpush

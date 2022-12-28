@@ -36,8 +36,13 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        
-        return $model->newQuery();
+       
+        if($this->role != null){
+          return $model->role($this->role);
+        }else{
+         return $model->newQuery();
+        }
+       
         
     }
 
@@ -48,21 +53,30 @@ class UsersDataTable extends DataTable
      */
     public function html(): HtmlBuilder
     {
-        // return $this->builder()
-        //             ->setTableId('users-table')
-        //             ->columns($this->getColumns())
-        //             ->minifiedAjax()
-        //             //->dom('Bfrtip')
-        //             ->orderBy(1)
-        //             ->selectStyleSingle()
-        //             ->buttons([
-        //                 Button::make('excel'),
-        //                 Button::make('csv'),
-        //                 Button::make('pdf'),
-        //                 Button::make('print'),
-        //                 Button::make('reset'),
-        //                 Button::make('reload')
-        //             ]);
+        return $this->builder()
+                    ->setTableId('users-table')
+                    ->columns($this->getColumns())
+                    // ->minifiedAjax()
+                    //->dom('Bfrtip')
+                    ->orderBy(1)
+                    ->selectStyleSingle()
+                    ->ajax([
+                        'url' => '/user-datatable',
+                        'type' => 'GET',
+                        'data' => 'function(d) { d.role = document.getElementById("role").value; }',
+                    ])
+                    ->parameters([
+                        'drawCallback' => 'function() { alert("Table Draw Callback") }',
+                    ])
+                       
+                    ->buttons([
+                        Button::make('excel'),
+                        Button::make('csv'),
+                        Button::make('pdf'),
+                        Button::make('print'),
+                        Button::make('reset'),
+                        Button::make('reload')
+                    ]);
     }
 
     /**

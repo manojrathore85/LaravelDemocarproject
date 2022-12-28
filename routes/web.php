@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::get('/', function () {
     return view('home');
 })->middleware('auth');
@@ -22,8 +24,13 @@ Auth::routes();
 Route::group(['middleware' =>['role:admin']],function(){
     Route::get('/usercreate',[UserController::class, 'create'])->name('usercreate');
     Route::post('/usercreate',[UserController::class, 'insert'])->name('userinsert');
+    Route::get('/useredit/{id}',[UserController::class, 'edit']);
+    Route::post('/useredit/{id}',[UserController::class, 'update']);
+    Route::get('/userdelete/{id}',[UserController::class, 'delete']);
     Route::get('/userview',[UserController::class, 'index'])->name('userview');
+    Route::get('/user-datatable',[UserController::class, 'view'])->name('user-datatable');
     Route::get('/salesview',[SalesController::class, 'index'])->name('salesview');
+    Route::get('/create10user',[UserController::class, 'create10user']);    
 });
 Route::group(['middleware' =>['role:merchant']],function(){
     Route::get('/salescreate',[SalesController::class, 'create'])->name('salescreate');
