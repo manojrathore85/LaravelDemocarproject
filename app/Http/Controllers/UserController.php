@@ -102,6 +102,7 @@ class UserController extends Controller
            $user->email = $request->post('email');
            $user->address = $request->post('address');
            $user->phone = $request->post('phone');
+           $user->syncRoles($request->post('role'));
            $res = $user->save();
            if($res){
                 return redirect('userview')->with('success','User updated successfully');

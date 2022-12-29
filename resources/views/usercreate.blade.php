@@ -99,9 +99,17 @@
                             <label for="role" class="col-md-4 col-form-label text-md-end">User Role</label>
                             <div class="col-md-6">                               
                                 <select id="role" class="form-control" name="role" required>
-                                    <option {{ $user->getRoleNames()[0] == "admin" ? "selected" : " "  }} value="admin">Admin</option>
-                                    <option {{ $user->getRoleNames()[0] == "merchant" ? "selected" :" "  }} value="merchant">Merchant</option>
-                                    <option {{ $user->getRoleNames()[0] == "customer" ? "selected" : " " }} value="customer">Customer</option>
+                                    @php 
+                                       
+                                        if($user->id > 0)
+                                            $role = $user->getRoleNames()[0];
+                                        else
+                                            $role = '0';
+                                    @endphp
+                                   
+                                    <option {{ $role == "admin" ? "selected" : " "  }} value="admin">Admin</option>
+                                    <option {{ $role == "merchant" ? "selected" :" "  }} value="merchant">Merchant</option>
+                                    <option {{ $role == "customer" ? "selected" : " " }} value="customer">Customer</option>
                                 </select>   
                                 @error('role')
                                     <span class="invalid-feedback" role="alert">
