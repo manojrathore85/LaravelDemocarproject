@@ -27,6 +27,7 @@
                             <th>Date</th>
                             <th>Customer</th>
                             <th>Car</th>
+                            <th>Action</th>
                            
                             </tr>
                            </thead> 
@@ -69,6 +70,7 @@
             {data: 'sale_date', name: 'sale_date'},
             {data: 'customername', name: 'customername'},
             {data: 'carname', name: 'carname'},
+            {data: 'action', name: 'action'},
             
           
             // {

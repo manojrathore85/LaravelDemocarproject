@@ -22,19 +22,23 @@ Route::get('/', function () {
 })->middleware('auth');
 Auth::routes();
 Route::group(['middleware' =>['role:admin']],function(){
-    Route::get('/usercreate',[UserController::class, 'create'])->name('usercreate');
-    Route::post('/usercreate',[UserController::class, 'insert'])->name('userinsert');
-    Route::get('/useredit/{id}',[UserController::class, 'edit']);
-    Route::post('/useredit/{id}',[UserController::class, 'update']);
+    Route::get('/usercreate',[UserController::class, 'manage'])->name('usercreate');
+    Route::post('/usercreate',[UserController::class, 'store'])->name('userinsert');
+    Route::get('/useredit/{id}',[UserController::class, 'manage']);
+    Route::post('/useredit/{id}',[UserController::class, 'store']);
     Route::get('/userdelete/{id}',[UserController::class, 'delete']);
     Route::get('/userview',[UserController::class, 'index'])->name('userview');
     Route::get('/user-datatable',[UserController::class, 'view'])->name('user-datatable');
     Route::get('/salesview',[SalesController::class, 'index'])->name('salesview');
+    Route::get('/salesedit/{id}',[SalesController::class, 'manage']);
+    Route::post('/salesupdate/{id}',[SalesController::class, 'store'])->name('salesupdate');
+    Route::get('/salesdelete',[SalesController::class, 'delete']);
     Route::get('/create10user',[UserController::class, 'create10user']);    
 });
 Route::group(['middleware' =>['role:merchant']],function(){
-    Route::get('/salescreate',[SalesController::class, 'create'])->name('salescreate');
-    Route::post('/salescreate',[SalesController::class, 'insert'])->name('salesinsert');
+    Route::get('/salescreate',[SalesController::class, 'manage'])->name('salescreate');
+    Route::post('/salescreate',[SalesController::class, 'store'])->name('salesinsert');
+  
     
 });
 

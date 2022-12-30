@@ -29,23 +29,24 @@ class SalesController extends Controller
             $data = $query->get();
             return Datatables::of($data)->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0)" class="btn btn-primary btn-sm">View</a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
+                    $btns = '<a href="/salesedit/'.$row->id.'" class="btn btn-primary btn-sm">Edit</a>';
+                    $btns .= '<a href="salesdelete/'.$row->id.'" class="btn btn-danger btn-sm">Delete</a>';
+                    return $btns;
+                })               
                 ->make(true);
         }
 
         return view('saleslist', compact('merchants'));
     }
 
-    public function create()
+    public function manage($id = '')
     {
+        $sales = $id ? sales::find($id): false;
         $users =  User::role('customer')->get();
         $cars = Car::all();
-        return view('salescreate', compact('users', 'cars'));
+        return view('salescreate', compact('users', 'cars', 'sales'));
     }
-    public function insert(Request $request)
+    public function store(Request $request, $id = '')
     {
         $request->validate([
             'sale_date' => 'required',
@@ -55,15 +56,17 @@ class SalesController extends Controller
         ]);
         //  dd($request);
         $sales = new sales();
-        $sales->sale_date =  $request->post('sale_date');
-        $sales->user_id = $request->post('user_id');
-        $sales->car_id = $request->post('car_id');
-        $sales->create_by = Auth::id();
-        $res = $sales->save();
-
-        //->assignRole($request->post('role'));
+        $params = $request->except(['_token']);
+        $params['create_by'] =  Auth::id();
+        if($id){
+           $res = sales::find($id)->update($params);
+        }else{
+            // dd($params);
+            
+            $res = $sales->create($params);
+        }
         if ($res) {
-            return back()->with('success', 'New Sales create successfuly');
+            return back()->with('success', 'Record Store successfuly');
         } else {
             return back()->with('fail', 'Something went wrong');
         }

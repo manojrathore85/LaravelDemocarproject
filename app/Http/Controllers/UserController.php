@@ -49,73 +49,47 @@ class UserController extends Controller
         //return view('userdatatable')->with($dataTable->render('userdatatable'));
 
     }
-    public function create(Request $request){
-       $user = new User();
-       return view('usercreate',compact('user'));
+    public function manage(Request $request, $id = ''){
+       $user = $id ? User::find($id) : false;
+       $user_role = $user ? $user->getRoleNames()[0] : '';
+       $roles = Role::all()->pluck('name');
+       return view('usercreate',compact('user','roles','user_role'));
     }
-    public function insert(Request $request){
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|max:16|confirmed:password_confirmation',
-            'phone' => 'sometimes|min:10|max:10|unique:users',
-            'role' => 'required'
-
-        ]);
-
-        $user = new User();
-        $user->name = $request->post('name');
-        $user->email = $request->post('email');
-        $user->password =  Hash::make($request->post('password'));
-        $user->address = $request->post('address');
-        $user->phone = $request->post('phone');
-    
-        $user->assignRole($request->post('role'));
-        //dd($user);
-
-        $res = $user->save();
-    
+    public function store(Request $request, $id = ''){
+       $varray = [
+        'name' => 'required',
+        'email' => 'required|email|unique:users,email,'.$id,
+        'phone' => 'sometimes|min:10|max:10|unique:users,phone,'.$id,
+        'role' => 'required',
+       ];
+       if(!$id){
+        $varray[ 'password'] =  'required|min:8|max:16|confirmed:password_confirmation';
+       }
+        $request->validate($varray);       
+       $params = $request->except(['_token', 'role']);      
+        if($id){          
+            $user = User::find($id);
+          
+            $user->syncRoles($request->post('role'));
+           $res = $user->update($params);
+        }
+        else {
+            $params['password'] = Hash::make($request->password);
+            $user = new User(); 
+            $res = $user->create($params);
+            $res->assignRole($request->role);
+        }   
         //->assignRole($request->post('role'));
         if($res){
-            return back()->with('success','New User create successfully');
+            return back()->with('success','Record Store successfully');
         }else{
             return back()->with('fail','Something went wrong');
         }
 
     }
-    public function edit($id){
-        if(!empty($id)){
-           $user = User::find($id);
-           return view('usercreate',compact('user'));
-        }
-    }
-    public function update($id, Request $request){
-        if(!empty($id)){
-           
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email,'.$id,              
-                'role' => 'required'
-            ]);
-           $user = User::find($id);
-           $user->name = $request->post('name');
-           $user->email = $request->post('email');
-           $user->address = $request->post('address');
-           $user->phone = $request->post('phone');
-           $user->syncRoles($request->post('role'));
-           $res = $user->save();
-           if($res){
-                return redirect('userview')->with('success','User updated successfully');
-            }else{
-                return back()->with('fail','Something went wrong');
-            }
-           
-        }
-    }
     public function delete($id)
     {
-        if(!empty($id)){
-           
+        if(!empty($id)){           
             $user = User::find($id);
             try{
             $res = $user->delete();           
